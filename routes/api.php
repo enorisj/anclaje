@@ -27,7 +27,7 @@ Route::post('area/store', [AreaController::class, 'store']);
 Route::put('area/{id}/update', [AreaController::class, 'update']);
 Route::delete('area/{id}/destroy', [AreaController::class, 'destroy']);
 
-Route::get('anchor', [AnchorPcController::class, 'index']);
+Route::get('anchors', [AnchorPcController::class, 'index']);
 Route::get('anchor/{id}', [AnchorPcController::class, 'show']);
 Route::post('anchor/store', [AnchorPcController::class, 'store']);
 Route::put('anchor/{id}/update', [AnchorPcController::class, 'update']);
