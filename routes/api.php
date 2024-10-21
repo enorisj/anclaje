@@ -35,5 +35,6 @@ Route::delete('anchor/{id}/destroy', [AnchorPcController::class, 'destroy']);
 
 Route::post('user/info', [JWTAuthController::class, 'infoperUser']);
 Route::post('user/ldapuser', [JWTAuthController::class, 'ldapUser']);
+Route::get('user/list', [JWTAuthController::class, 'getUsers']);
 
 });

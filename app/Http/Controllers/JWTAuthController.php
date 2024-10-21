@@ -162,4 +162,11 @@ class JWTAuthController extends Controller
            'message' => 'User not exist'
         ], 201);
     }
+    public function getUsers()
+    {
+    
+       $users=User::get();
+
+        return response()->json(compact('users'));
+    }
 }
