@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use adLDAP\adLDAP;
 use App\Models\User;
+use App\Models\UserLdap;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -37,23 +42,142 @@ class JWTAuthController extends Controller
     // User login
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+       
+        $credentials = $request->only(['username', 'password']);
+        $user = User::where('username', '=', $credentials['username'])->first();
+        if (!is_null($user)) 
+        {
+            require_once(app_path(). "../../vendor/adLDAP/adLDAP.php");
+            try {
+                $adldap = new adLDAP();
+            } catch (Exception $e) {
+                exit();
+            }
+            $result = $adldap->authenticate($request['username'], $request['password']);
+           // $userinfo = $adldap->user()->info('enoris',['*'],false);
+            if($result){
+                
+                $id = DB::select('select users.id from users where username = ?', [$request['username']]);
+                $user_jwt = User::find($id[0]->id);
+                $jwt_token = Auth::login($user_jwt);
+               
+                $payloadable = [
+                    'id' => $user_jwt->id,
+                    'username' => $user_jwt->username,
+                    'email' => $user_jwt->email,
+                    'name' => $user_jwt->name,
+            
+                ];
 
-        try {
-            if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
-            }     
+                try {
+                
+                    if (!$jwt_token = Auth::login($user_jwt)) {
+                        return  response()->json([
+                            'status' => 'invalid_credentials',
+                            'message' => 'Correo o contraseña no válidos.',
+                        ], 401);
+                    }
+                } catch (\Throwable $th) {
+                    dd($th);
+                }
+    
+                $token = Auth::customClaims($payloadable)->fromUser($user_jwt);
+                $user = Auth::authenticate($request->token);
+                return  response()->json([
+                    'status' => 'Se ha logueado correctamente',
+                    'token' => $token,
+                    'data' => $user,
+                ]);
+            }
+            else{
+                return  response()->json([
+                    'status' => 'invalid_credentials',
+                    'message' => 'Correo o contraseña no válidos.',
+                ], 401);
+            }
 
-     
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+        }        
+        else
+        {
+            return  response()->json([
+                'status' => 'invalid_credentials',
+                'message' => 'No tiene acceso al sistema,consulte al administrador',
+            ], 401);
         }
-        return response()->json(compact('token'));
+        dd('end');
+
+        //old
+        $credentials = $request->only(['username', 'password']);
+
+        //verificar si existe en la bd
+        $user = User::where('username', '=', $credentials['username'])->first();
+        if (!is_null($user)) {
+
+            //verificacion en el AD if(verificacion true)
+
+             require_once(app_path(). "../../vendor/adLDAP/adLDAP.php");
+             try {
+                 $adldap = new adLDAP();
+             } catch (Exception $e) {
+                 exit();
+             }
+             $result = $adldap->authenticate($request['username'], $request['password']);
+            // $userinfo = $adldap->user()->info('enoris',['*'],false);
+             if($result){
+
+                if (Auth::attempt($credentials)) {
+                    $id = DB::select('select users.id from users where username = ?', [$request['username']]);
+                    $user_jwt = User::find($id[0]->id);
+                
+                    //Creacion del token con el email y el pass
+                    $payloadable = [
+                        'id' =>$user_jwt->id,
+                        'username' =>$user_jwt->username,
+                        'email' =>$user_jwt->email,
+                     
+                    ];
+               
+                    $user = Auth::user();
+                    $token = Auth::customClaims($payloadable)->fromUser($user_jwt);
+                    return  response()->json([
+                        'status' => 'Se ha logueado correctamente',
+                        'access_token' => $token,
+                        'data' => $user,
+                    ]);
+                }
+
+                $id = DB::select('select users.id from users where username = ?', [$request['username']]);
+                $user_jwt = User::find($id[0]->id);
+            
+                //Creacion del token con el email y el pass
+                $payloadable = [
+                    'id' =>$user_jwt->id,
+                    'username' =>$user_jwt->username,
+                    'email' =>$user_jwt->email,
+                 
+                ];
+
+                $token = Auth::customClaims($payloadable)->fromUser($user);
+                $user = Auth::authenticate($request->token);
+                return  response()->json([
+                    'status' => 'Se ha logueado correctamente',
+                    'token' => $token,
+                    'data' => $user,
+                ]);
+           }
+
+        }
+        return  response()->json([
+            'status' => 'invalid_credentials',
+            'message' => 'No tiene acceso al sistema,consulte al administrador',
+        ], 401);
     }
 
     // Get authenticated user
     public function getUser()
     {
+        // TODO
+        // Pasar el nombre de usuario invoca a la funion findUser y devuelvas el name y email
         try {
             if (! $user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['error' => 'User not found'], 404);
@@ -64,12 +188,41 @@ class JWTAuthController extends Controller
 
         return response()->json(compact('user'));
     }
+    //buscar en el directorio activo
+    public function findUser()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
 
+        return response()->json(['message' => 'Successfully logged out']);
+    }
     // User logout
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json(['message' => 'Successfully logged out']);
+    }
+    public function infoperUser(Request $request)
+    {
+        $users = DB::connection("sqlsrv")->select('SELECT * FROM Employees WHERE expte = ?', [$request['solapin']]);
+        return response()->json([
+            'user' => $users
+        ]);
+    }
+
+    public function ldapUser( Request $request){
+       //buscar en ldap (username,mail,solapin)
+       $userLdap = UserLdap::select('employeenumber','mail','cn')->where('samaccountname', '=', $request['username'])->get();
+
+       if(!$userLdap->isEmpty()){
+            return response()->json([
+               'message'=>'User exist.',
+               'userLdap'=>$userLdap
+            ], 201);
+
+       }
+        return response()->json([
+           'message' => 'User not exist'
+        ], 201);
     }
 }

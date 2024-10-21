@@ -33,4 +33,7 @@ Route::post('anchor/store', [AnchorPcController::class, 'store']);
 Route::put('anchor/{id}/update', [AnchorPcController::class, 'update']);
 Route::delete('anchor/{id}/destroy', [AnchorPcController::class, 'destroy']);
 
+Route::post('user/info', [JWTAuthController::class, 'infoperUser']);
+Route::post('user/ldapuser', [JWTAuthController::class, 'ldapUser']);
+
 });
