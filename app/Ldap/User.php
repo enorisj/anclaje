@@ -2,6 +2,7 @@
 
 namespace App\Ldap;
 
+
 use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 use LdapRecord\Models\Model;
 

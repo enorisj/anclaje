@@ -46,16 +46,17 @@ class JWTAuthController extends Controller
         $credentials = $request->only(['username', 'password']);
         $user = User::where('username', '=', $credentials['username'])->first();
         if (!is_null($user)) 
-        {
+       {
+        /*
             require_once(app_path(). "../../vendor/adLDAP/adLDAP.php");
             try {
                 $adldap = new adLDAP();
             } catch (Exception $e) {
                 exit();
-            }
-            $result = $adldap->authenticate($request['username'], $request['password']);
-           // $userinfo = $adldap->user()->info('enoris',['*'],false);
-            if($result){
+            }*/
+            //$result = $adldap->authenticate($request['username'], $request['password']);
+                $result=true;
+                if($result){
                 
                 $id = DB::select('select users.id from users where username = ?', [$request['username']]);
                 $user_jwt = User::find($id[0]->id);
@@ -78,7 +79,10 @@ class JWTAuthController extends Controller
                         ], 401);
                     }
                 } catch (\Throwable $th) {
-                    dd($th);
+                    return  response()->json([
+                        'status' => 'unknow_error',
+                        'message' => $th,
+                    ], 401);
                 }
     
                 $token = Auth::customClaims($payloadable)->fromUser($user_jwt);
@@ -109,7 +113,7 @@ class JWTAuthController extends Controller
     // Get authenticated user
     public function getUser()
     {
-        // TODO
+    
         // Pasar el nombre de usuario invoca a la funion findUser y devuelvas el name y email
         try {
             if (! $user = JWTAuth::parseToken()->authenticate()) {
@@ -145,7 +149,7 @@ class JWTAuthController extends Controller
 
     public function ldapUser( Request $request){
        //buscar en ldap (username,mail,solapin)
-       $userLdap = UserLdap::select('employeenumber','mail','cn')->where('samaccountname', '=', $request['username'])->get();
+       /*$userLdap = UserLdap::select('employeenumber','mail','cn')->where('samaccountname', '=', $request['username'])->get();
 
        if(!$userLdap->isEmpty()){
             return response()->json([
@@ -153,7 +157,7 @@ class JWTAuthController extends Controller
                'userLdap'=>$userLdap
             ], 201);
 
-       }
+       }*/
         return response()->json([
            'message' => 'User not exist'
         ], 201);

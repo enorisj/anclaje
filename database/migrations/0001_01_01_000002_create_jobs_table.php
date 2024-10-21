@@ -33,7 +33,7 @@ return new class extends Migration
             $table->integer('created_at');
             $table->integer('finished_at')->nullable();
         });
- /* 
+        Schema::dropIfExists('failed_jobs');
         Schema::create('failed_jobs', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
@@ -42,7 +42,7 @@ return new class extends Migration
             $table->longText('payload');
             $table->longText('exception');
             $table->timestamp('failed_at')->useCurrent();
-        });*/
+        });
     }
 
     /**
