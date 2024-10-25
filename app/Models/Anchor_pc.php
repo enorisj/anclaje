@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Anchor_pc extends Model
 {
-    use HasFactory, SoftDeletes;
+    use  SoftDeletes;
     public $table = 'anchor_pcs';
     protected $fillable = [
         'numero',

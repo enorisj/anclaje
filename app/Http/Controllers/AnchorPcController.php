@@ -29,7 +29,7 @@ class AnchorPcController extends Controller
     {
         $anchor = Anchor_pc::find($id);
         return response()->json([
-            'anchor' => $anchor
+            'anchor_pcs' => $anchor
         ]);
     }
 
@@ -49,8 +49,9 @@ class AnchorPcController extends Controller
             'flash_message' => 'Anchor eliminado satisfactoriamente.'
         ]);   
     }
-    public function forceDestroy (Anchor_pc $anchor)
+    public function forceDestroy ($id)
     {
+        $anchor = Anchor_pc::find($id);
         $anchor->forceDelete();       
         return response()->json([
             'flash_message' => 'Anchor eliminado satisfactoriamente de la base de datos.'
@@ -58,6 +59,7 @@ class AnchorPcController extends Controller
     }
 
     public function getDeleted(){
+   
         $anchor = Anchor_pc::onlyTrashed()->get();
         return response()->json([
             'anchor_pcs' => $anchor

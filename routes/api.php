@@ -27,14 +27,15 @@ Route::post('area/store', [AreaController::class, 'store']);
 Route::put('area/{id}/update', [AreaController::class, 'update']);
 Route::delete('area/{id}/destroy', [AreaController::class, 'destroy']);
 
+Route::get('anchor/{id}/force-destroy', [AnchorPcController::class, 'forceDestroy']);
+Route::get('anchor/{id}/restore', [AnchorPcController::class, 'restore']);
+Route::get('anchor/deleted', [AnchorPcController::class, 'getDeleted']);
 Route::get('anchors', [AnchorPcController::class, 'index']);
 Route::get('anchor/{id}', [AnchorPcController::class, 'show']);
 Route::post('anchor/store', [AnchorPcController::class, 'store']);
 Route::put('anchor/{id}/update', [AnchorPcController::class, 'update']);
 Route::delete('anchor/{id}/destroy', [AnchorPcController::class, 'destroy']);
-Route::delete('anchor/{id}/force-destroy', [AnchorPcController::class, 'forceDestroy']);
-Route::delete('anchor/{id}/restore', [AnchorPcController::class, 'restore']);
-Route::get('anchor/deleted', [AnchorPcController::class, 'getDeleted']);
+
 
 Route::post('user/info', [JWTAuthController::class, 'infoperUser']);
 Route::post('user/ldapuser', [JWTAuthController::class, 'ldapUser']);
