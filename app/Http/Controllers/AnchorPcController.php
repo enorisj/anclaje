@@ -33,9 +33,11 @@ class AnchorPcController extends Controller
         ]);
     }
 
-    public function update(AnchorPCRequest $request, Anchor_pc $anchor)
+    public function update(AnchorPCRequest $request, $id)
     {
-        $anchor->update($request->validated());
+        $anchor = Anchor_pc::find($id);
+
+            $anchor->update($request->validated());
         return response()->json([
             'flash_message' => 'Anchor actualizado satisfactoriamente.',
             'anchor' => $anchor

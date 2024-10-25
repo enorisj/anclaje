@@ -14,5 +14,5 @@ class Area extends Model
         'name',     
     ];
 
-    public function anchor():HasMany { return $this->hasMany(Anchor_pc::class,'id','areas_id'); }
+    public function anchor():HasMany { return $this->hasMany(Anchor_pc::class,'areas_id','id'); }
 }

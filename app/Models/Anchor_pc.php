@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Anchor_pc extends Model
@@ -27,6 +27,6 @@ class Anchor_pc extends Model
         'areas_id',
     ];
 
-    public function areas():BelongsTo { return $this->belongsTo(Area::class,'areas_id','id'); }
+    public function area() { return $this->hasOne(Area::class,'id','areas_id'); }
 
 }

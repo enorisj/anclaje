@@ -31,10 +31,10 @@ Route::get('anchor/{id}/force-destroy', [AnchorPcController::class, 'forceDestro
 Route::get('anchor/{id}/restore', [AnchorPcController::class, 'restore']);
 Route::get('anchor/deleted', [AnchorPcController::class, 'getDeleted']);
 Route::get('anchors', [AnchorPcController::class, 'index']);
-Route::get('anchor/{id}', [AnchorPcController::class, 'show']);
 Route::post('anchor/store', [AnchorPcController::class, 'store']);
 Route::put('anchor/{id}/update', [AnchorPcController::class, 'update']);
 Route::delete('anchor/{id}/destroy', [AnchorPcController::class, 'destroy']);
+Route::get('anchor/{id}', [AnchorPcController::class, 'show']);
 
 
 Route::post('user/info', [JWTAuthController::class, 'infoperUser']);

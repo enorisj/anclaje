@@ -31,12 +31,13 @@ class AreaController extends Controller
     
     }
 
-    public function update(AreaRequest $request, Area $area)
+    public function update(AreaRequest $request, $id)
     {
+        $area = Area::find($id);
         $area->update($request->validated());
         return response()->json([
             'flash_message' => 'Área actualizada satisfactoriamente.',
-            'organizre' => $area
+            'area' => $area
         ]);
 
     }

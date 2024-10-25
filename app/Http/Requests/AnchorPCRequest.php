@@ -22,10 +22,10 @@ class AnchorPCRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'numero'=> 'required|number',
+            'numero'=> 'required|numeric',
             'switch'=> 'required',
             'patch_panel'=> 'required',
-            'puerto'=> 'number',
+            'puerto'=> 'numeric',
             'maquina'=> 'string|max:255',
             'description'=>'string|max:255',
             'mac'=>'mac_address',
@@ -33,12 +33,12 @@ class AnchorPCRequest extends FormRequest
             'comentario'=>'string|max:255',
             'rp'=>'string|max:255',
             'direccionip'=>'ip',
-            'vlan'=>'number',
-            'areas_id'=> 'required|string|max:100|unique:areas',
+            'vlan'=>'numeric',
+            'areas_id'=> 'required',
     
         ];
     }
-
+/*
     public function messages(): array
     {
         return [
@@ -47,5 +47,5 @@ class AnchorPCRequest extends FormRequest
             'patch_panel.required' => 'El path panes es un campo requerido',
       
         ];
-    }
+    }*/
 }
