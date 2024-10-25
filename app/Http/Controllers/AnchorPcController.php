@@ -49,5 +49,28 @@ class AnchorPcController extends Controller
             'flash_message' => 'Anchor eliminado satisfactoriamente.'
         ]);   
     }
+    public function forceDestroy (Anchor_pc $anchor)
+    {
+        $anchor->forceDelete();       
+        return response()->json([
+            'flash_message' => 'Anchor eliminado satisfactoriamente de la base de datos.'
+        ]);   
+    }
 
+    public function getDeleted(){
+        $anchor = Anchor_pc::onlyTrashed()->get();
+        return response()->json([
+            'anchor_pcs' => $anchor
+        ]);
+    
+    }
+    public function restore($id){
+    
+        $anchor = Anchor_pc::onlyTrashed()->find($id);
+        $anchor->restore();
+        return response()->json([
+            'flash_message' => 'Anchorha sido restaurado.'
+        ]);   
+    }
+    
 }

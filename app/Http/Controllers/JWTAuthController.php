@@ -47,21 +47,15 @@ class JWTAuthController extends Controller
         $user = User::where('username', '=', $credentials['username'])->first();
         if (!is_null($user)) 
        {
-        /*
-            require_once(app_path(). "../../vendor/adLDAP/adLDAP.php");
-            try {
-                $adldap = new adLDAP();
-            } catch (Exception $e) {
-                exit();
-            }*/
-            //$result = $adldap->authenticate($request['username'], $request['password']);
-                $result=true;
-                if($result){
+        
+         // $is_correct_user_ldap= $this->LDAPConnect($request['username'],$request['password']);
+        $is_correct_user_ldap=true;
+        if($is_correct_user_ldap){
                 
                 $id = DB::select('select users.id from users where username = ?', [$request['username']]);
                 $user_jwt = User::find($id[0]->id);
                 $jwt_token = Auth::login($user_jwt);
-               
+            
                 $payloadable = [
                     'id' => $user_jwt->id,
                     'username' => $user_jwt->username,
@@ -108,6 +102,16 @@ class JWTAuthController extends Controller
                 'message' => 'No tiene acceso al sistema,consulte al administrador',
             ], 401);
         }
+    }
+
+    public function LDAPConnect($username, $password){
+        require_once(app_path(). "../../vendor/adLDAP/adLDAP.php");
+        try {
+            $adldap = new adLDAP();
+        } catch (Exception $e) {
+            exit();
+        }
+       return $result = $adldap->authenticate($username, $password);
     }
 
     // Get authenticated user
