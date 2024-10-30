@@ -23,11 +23,11 @@ class AnchorPCRequest extends FormRequest
     {
         return [
             'numero'=> 'required|numeric',
-            'switch'=> 'required',
-            'patch_panel'=> 'required',
+            'switch'=> 'string|max:20',
+            'patch_panel'=> 'string|max:20',
             'puerto'=> 'numeric',
             'maquina'=> 'string|max:255',
-            'description'=>'string|max:255',
+            'descripcion'=>'string|max:255',
             'mac'=>'mac_address',
             'anclaje'=>'string|max:255',
             'comentario'=>'string|max:255',

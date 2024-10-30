@@ -17,7 +17,7 @@ class Anchor_pc extends Model
         'patch_panel',
         'puerto',
         'maquina',
-        'description',
+        'descripcion',
         'mac',
         'anclaje',
         'comentario',

@@ -21,7 +21,7 @@ class JWTAuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+          
         ]);
 
         if($validator->fails()){
@@ -59,9 +59,7 @@ class JWTAuthController extends Controller
                 $payloadable = [
                     'id' => $user_jwt->id,
                     'username' => $user_jwt->username,
-                    'email' => $user_jwt->email,
-                    'name' => $user_jwt->name,
-            
+                    'email' => $user_jwt->email                
                 ];
 
                 try {
@@ -79,11 +77,11 @@ class JWTAuthController extends Controller
                     ], 401);
                 }
     
-                $token = Auth::customClaims($payloadable)->fromUser($user_jwt);
+                $jwt_token = Auth::customClaims($payloadable)->fromUser($user_jwt);
                 $user = Auth::authenticate($request->token);
                 return  response()->json([
                     'status' => 'Se ha logueado correctamente',
-                    'token' => $token,
+                    'token' => $jwt_token,
                     'data' => $user,
                 ]);
             }

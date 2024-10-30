@@ -10,7 +10,7 @@ class AnchorPcController extends Controller
 {
     public function index()
     {
-        $anchor_pcs = Anchor_pc::all();
+        $anchor_pcs = Anchor_pc::whereNull('deleted_at')->get();
         return response()->json([
             'anchor_pcs' => $anchor_pcs
         ]);
@@ -32,6 +32,13 @@ class AnchorPcController extends Controller
             'anchor_pcs' => $anchor
         ]);
     }
+    public function getByNumber($number){
+
+        $anchor_by_number = Anchor_pc::where('numero', $number)->first();
+        return response()->json([
+            'anchor_pc' => $anchor_by_number
+        ]);
+    }
 
     public function update(AnchorPCRequest $request, $id)
     {
@@ -39,32 +46,33 @@ class AnchorPcController extends Controller
 
             $anchor->update($request->validated());
         return response()->json([
-            'flash_message' => 'Anchor actualizado satisfactoriamente.',
+            'flash_message' => 'Anchor PC actualizado satisfactoriamente.',
             'anchor' => $anchor
         ]);         
     }
 
-    public function destroy (Anchor_pc $anchor)
+    public function destroy ($id)
     {
+        $anchor = Anchor_pc::find($id);
         $anchor->delete();       
         return response()->json([
-            'flash_message' => 'Anchor eliminado satisfactoriamente.'
+            'flash_message' => 'Anchor PC eliminado satisfactoriamente.'
         ]);   
     }
     public function forceDestroy ($id)
     {
-        $anchor = Anchor_pc::find($id);
+        $anchor = Anchor_pc::withoutTrashed()->find($id);
         $anchor->forceDelete();       
         return response()->json([
-            'flash_message' => 'Anchor eliminado satisfactoriamente de la base de datos.'
+            'flash_message' => 'Anchor PC eliminado satisfactoriamente de la base de datos.'
         ]);   
     }
 
     public function getDeleted(){
    
-        $anchor = Anchor_pc::onlyTrashed()->get();
+        $anchor_delelted = Anchor_pc::onlyTrashed()->get();
         return response()->json([
-            'anchor_pcs' => $anchor
+            'anchor_pcs' => $anchor_delelted
         ]);
     
     }
@@ -73,7 +81,7 @@ class AnchorPcController extends Controller
         $anchor = Anchor_pc::onlyTrashed()->find($id);
         $anchor->restore();
         return response()->json([
-            'flash_message' => 'Anchorha sido restaurado.'
+            'flash_message' => 'Anchor PC ha sido restaurado.'
         ]);   
     }
     

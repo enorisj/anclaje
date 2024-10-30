@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnchorPcController;
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\JWTAuthController;
+use App\Models\Area;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,15 +22,20 @@ Route::group([
     Route::post('/refresh', [JWTAuthController::class, 'refresh'])->name('refresh');
 
 
+Route::get('area/{id}/force-destroy', [AreaController::class, 'forceDestroy']);
+Route::get('area/{id}/restore', [AreaController::class, 'restore']);
+Route::get('area/deleted', [AreaController::class, 'getDeleted']);
 Route::get('areas', [AreaController::class, 'index']);
 Route::get('area/{id}', [AreaController::class, 'show']);
 Route::post('area/store', [AreaController::class, 'store']);
 Route::put('area/{id}/update', [AreaController::class, 'update']);
 Route::delete('area/{id}/destroy', [AreaController::class, 'destroy']);
 
+ 
 Route::get('anchor/{id}/force-destroy', [AnchorPcController::class, 'forceDestroy']);
 Route::get('anchor/{id}/restore', [AnchorPcController::class, 'restore']);
 Route::get('anchor/deleted', [AnchorPcController::class, 'getDeleted']);
+Route::get('anchor/{number}/find', [AnchorPcController::class, 'getByNumber']);
 Route::get('anchors', [AnchorPcController::class, 'index']);
 Route::post('anchor/store', [AnchorPcController::class, 'store']);
 Route::put('anchor/{id}/update', [AnchorPcController::class, 'update']);
