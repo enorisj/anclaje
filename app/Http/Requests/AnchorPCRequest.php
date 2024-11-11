@@ -23,19 +23,18 @@ class AnchorPCRequest extends FormRequest
     {
         return [
             'numero'=> 'required|numeric',
-            'switch'=> 'string|max:20',
-            'patch_panel'=> 'string|max:20',
-            'puerto'=> 'numeric',
-            'maquina'=> 'string|max:255',
-            'descripcion'=>'string|max:255',
-            'mac'=>'mac_address',
-            'anclaje'=>'string|max:255',
-            'comentario'=>'string|max:255',
-            'rp'=>'string|max:255',
-            'direccionip'=>'ip',
-            'vlan'=>'numeric',
-            'areas_id'=> 'required',
-    
+            'switch'=> 'nullable|string|max:20',
+            'patch_panel'=> 'nullable|string|max:20',
+            'puerto'=> 'nullable|numeric',
+            'maquina'=> 'nullable|string|max:255',
+            'descripcion'=>'nullable|string|max:255',
+            'mac'=>'nullable|mac_address',
+            'anclaje'=>'nullable|string|max:255',
+            'comentario'=>'nullable|string|max:255',
+            'rp'=>'nullable|string|max:255',
+            'direccionip'=>'nullable|ip',
+            'vlan'=>'nullable|string',
+            'areas_id'=> 'required'    
         ];
     }
 /*

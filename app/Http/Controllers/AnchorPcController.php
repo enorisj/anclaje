@@ -34,9 +34,9 @@ class AnchorPcController extends Controller
     }
     public function getByNumber($number){
 
-        $anchor_by_number = Anchor_pc::where('numero', $number)->first();
+        $anchors_by_number = Anchor_pc::where('numero', $number)->get();
         return response()->json([
-            'anchor_pc' => $anchor_by_number
+            'anchor_pc' => $anchors_by_number
         ]);
     }
 

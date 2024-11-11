@@ -48,8 +48,8 @@ class JWTAuthController extends Controller
         if (!is_null($user)) 
        {
         
-         // $is_correct_user_ldap= $this->LDAPConnect($request['username'],$request['password']);
-        $is_correct_user_ldap=true;
+        $is_correct_user_ldap= $this->LDAPConnect($request['username'],$request['password']);
+        //$is_correct_user_ldap=true;
         if($is_correct_user_ldap){
                 
                 $id = DB::select('select users.id from users where username = ?', [$request['username']]);
@@ -112,28 +112,7 @@ class JWTAuthController extends Controller
        return $result = $adldap->authenticate($username, $password);
     }
 
-    // Get authenticated user
-    public function getUser()
-    {
-    
-        // Pasar el nombre de usuario invoca a la funion findUser y devuelvas el name y email
-        try {
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Invalid token'], 400);
-        }
 
-        return response()->json(compact('user'));
-    }
-    //buscar en el directorio activo
-    public function findUser()
-    {
-        JWTAuth::invalidate(JWTAuth::getToken());
-
-        return response()->json(['message' => 'Successfully logged out']);
-    }
     // User logout
     public function logout()
     {
@@ -141,34 +120,7 @@ class JWTAuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-    public function infoperUser(Request $request)
-    {
-        $users = DB::connection("sqlsrv")->select('SELECT * FROM Employees WHERE expte = ?', [$request['solapin']]);
-        return response()->json([
-            'user' => $users
-        ]);
-    }
 
-    public function ldapUser( Request $request){
-       //buscar en ldap (username,mail,solapin)
-       /*$userLdap = UserLdap::select('employeenumber','mail','cn')->where('samaccountname', '=', $request['username'])->get();
 
-       if(!$userLdap->isEmpty()){
-            return response()->json([
-               'message'=>'User exist.',
-               'userLdap'=>$userLdap
-            ], 201);
-
-       }*/
-        return response()->json([
-           'message' => 'User not exist'
-        ], 201);
-    }
-    public function getUsers()
-    {
-    
-       $users=User::get();
-
-        return response()->json(compact('users'));
-    }
+   
 }

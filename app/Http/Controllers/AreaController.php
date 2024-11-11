@@ -57,7 +57,7 @@ class AreaController extends Controller
         $area = Area::withoutTrashed()->find($id);
         $area->forceDelete();       
         return response()->json([
-            'flash_message' => 'Área eliminado satisfactoriamente de la base de datos.'
+            'flash_message' => 'Área eliminada satisfactoriamente de la base de datos.'
         ]);   
     }
 
@@ -74,7 +74,7 @@ class AreaController extends Controller
         $area = Area::onlyTrashed()->find($id);
         $area->restore();
         return response()->json([
-            'flash_message' => 'Área ha sido restaurado.'
+            'flash_message' => 'Área ha sido restaurada.'
         ]);   
     }
 }
